@@ -22,10 +22,10 @@ const Login = () => {
 
 
     const handleGoogleSignIn = () => {
-        var provider = new firebase.auth.GoogleAuthProvider();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
 
         
-        firebase.auth().signInWithPopup(provider).then(function(result) {
+        firebase.auth().signInWithPopup(googleProvider).then(function(result) {
            
             const {displayName, email} = result.user;
             const signedInUser = {name: displayName, email: email}
@@ -45,10 +45,33 @@ const Login = () => {
           });
 
     }
+
+    const handleFbSignIn = () => {
+
+        const fbProvider = new firebase.auth.FacebookAuthProvider();
+        
+        firebase.auth().signInWithPopup(fbProvider).then(function(result) {
+            var token = result.credential.accessToken;
+            var user = result.user;
+            setLoggedInUser(loggedInUser);
+            console.log('sign in user' , user);
+            // ...
+          }).catch(function(error) {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            var email = error.email;
+            var credential = error.credential;
+            // ...
+          });
+
+    }
+
     return (
         <div>
             <h1>This is Login</h1>
             <button onClick={handleGoogleSignIn}>Google Sign In</button>
+            <br/>
+            <button onClick = {handleFbSignIn}>Sign in using Facebook</button>
         </div>
     );
 };
